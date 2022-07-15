@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "36825701255",
+    "firebase_url": "https://lingkar-merapi-default-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "lingkar-merapi-default",
+    "storage_bucket": "lingkar-merapi-default.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:36825701255:android:ccd7e490a9d43e7da5d122",
+        "android_client_info": {
+          "package_name": "com.merapi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "36825701255-t0huhr38bpqtp1loajn5pgqcraceubfh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS7ktebA6i05Vsgl6n-nhLvFQIomXv83Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "36825701255-t0huhr38bpqtp1loajn5pgqcraceubfh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
