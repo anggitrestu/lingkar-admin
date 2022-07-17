@@ -4,13 +4,9 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { BeritaMerapi, StatusMerapi, KontakDarurat } from '../screens';
 import InformasiStatusNavigation from './InformasiStatusNavigation';
-import messaging from '@react-native-firebase/messaging'
 
 import { useDispatch } from 'react-redux'
-import { loadStatus } from '../redux/action/merapi'
-import { getContact } from '../redux/action/padukuhan'
-
-import { getNews } from '../redux/action/news';
+import { loadPadukuhan, loadStatus, } from '../store'
 
 const Drawer = createDrawerNavigator();
 
@@ -21,8 +17,8 @@ export default function AppNavigation() {
     React.useEffect(() => {
         const subscription = AppState.addEventListener('change', nextAppState => {
             dispatch(loadStatus() as never)
-            dispatch(getNews() as never)
-            dispatch(getContact() as never)
+            dispatch(loadPadukuhan() as never)
+
         })
 
         return () => {
@@ -33,7 +29,7 @@ export default function AppNavigation() {
 
     return (
         <NavigationContainer>
-            <Drawer.Navigator initialRouteName="KontakDaruratDrawer"
+            <Drawer.Navigator initialRouteName="StatusMerapi"
                 screenOptions={
                     {
                         headerStyle: {

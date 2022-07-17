@@ -6,19 +6,9 @@ const { height, width } = Dimensions.get("window")
 import ModalSelector from "react-native-modal-selector"
 import { addContact, removeContact, updateContact } from "../../redux/action/padukuhan"
 import { useDispatch, useSelector } from "react-redux"
-import { RootState } from "../../redux/reducer"
-
-let index: number = 0;
-const DataPadukuhan = [
-    {
-        key: index++,
-        label: "Ngandong",
-    },
-    {
-        key: index++,
-        label: "Sidorejo-Nganggring",
-    }
-]
+import { loadKontak, RootState, addKontak, removeKontak, updateKontak } from "../../store"
+import { PadukuhanType } from "../../store/types"
+import { useIsFocused } from "@react-navigation/native"
 
 
 type kontakDaruratType = {
@@ -38,7 +28,20 @@ const defaultCurrentState: kontakDaruratType = {
 }
 
 const KontakDarurat = () => {
-    const kontaks = useSelector((state: RootState) => state.padukuhan.padukuhanContacts)
+    const padukuhan = useSelector((state: RootState) => state.padukuhan.list)
+    const kontakData = useSelector((state: RootState) => state.kontak.kontak)
+
+    useEffect(() => {
+        dispatch(loadKontak() as never)
+    }, [useIsFocused])
+
+    const listPadukuhanDropwdown = padukuhan.map((item: PadukuhanType) => {
+        return {
+            key: item.key,
+            label: item.nama,
+        }
+    })
+
     const [isVisible, setIsVisible] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
 
@@ -49,12 +52,9 @@ const KontakDarurat = () => {
     const [name, setName] = useState("")
     const [phone, setPhone] = useState("")
     const [profesi, setProfesi] = useState("")
+    const [dukuhSebelumnya, setDukuhSebelumnya] = useState("")
 
-    const [dataKontak, setDataKontak] = useState<kontakDaruratType[]>([])
-
-    useEffect(() => {
-        setDataKontak(kontaks)
-    }, [kontaks])
+    console.log("dukuhSebelumnya", dukuhSebelumnya)
 
     const validateInput = () => {
         if (name === "" || currentDataPadukuhan === "" || phone === "" || profesi === "") {
@@ -69,19 +69,18 @@ const KontakDarurat = () => {
         setName("")
         setPhone("")
         setProfesi("")
+        setDukuhSebelumnya("")
         setCurrentData(defaultCurrentState)
     }
 
-    // current state
     const [currentData, setCurrentData] = useState<kontakDaruratType>(defaultCurrentState)
-    // console.log("currentData", currentData)
     const handleModal = () => {
         clearForm()
         setIsEdit(false)
         setIsVisible(true)
     }
 
-    const handleRemove = (key: string) => {
+    const handleRemove = (dukuh: string, key: string) => {
         Alert.alert(
             'Hapus Informasi',
             'Apakah anda yakin ingin menghapus informasi ini?',
@@ -89,7 +88,7 @@ const KontakDarurat = () => {
                 { text: 'Batal', style: 'cancel' },
                 {
                     text: 'OK', onPress: () => {
-                        dispatch(removeContact(key) as never)
+                        dispatch(removeKontak({ dukuh, key }) as never)
                         clearForm()
                         setIsVisible(false)
                     }
@@ -104,13 +103,17 @@ const KontakDarurat = () => {
 
 
     const handleUpdate = (key: string) => {
+        console.log("key", key)
         setIsVisible(true)
-        const data = dataKontak.find((item: any) => item.key === key)
+        const data = kontakData.find((item: any) => item.key === key)
         if (data) {
             setCurrentDataPadukuhan(data?.dukuh || "")
-            setName(data?.name || "")
-            setPhone(data?.phone || "")
-            setProfesi(data?.profesi || "")
+            setDukuhSebelumnya(data.dukuh)
+            console.log("dukuh_", setDukuhSebelumnya)
+            console.log("currentDataPadukuhan", currentDataPadukuhan)
+            setName(data.nama)
+            setPhone(data.no_hp)
+            setProfesi(data.keterangan)
             setCurrentData(data)
         }
         setIsEdit(true)
@@ -120,14 +123,14 @@ const KontakDarurat = () => {
         const valid = validateInput()
         if (valid) {
             if (isEdit) {
-                // update 
-                const data = {
+                dispatch(updateKontak({
+                    key: currentData.key,
                     dukuh: currentDataPadukuhan,
-                    name: name,
-                    phone: phone,
-                    profesi: profesi,
-                }
-                dispatch(updateContact(currentData.key || "", data) as never)
+                    nama: name,
+                    no_hp: phone,
+                    keterangan: profesi,
+                    dukuh_sebelumnya: dukuhSebelumnya,
+                }) as never)
                 setIsVisible(false)
                 clearForm()
 
@@ -135,11 +138,11 @@ const KontakDarurat = () => {
 
                 const data = {
                     dukuh: currentDataPadukuhan,
-                    name: name,
-                    phone: phone,
-                    profesi: profesi,
+                    nama: name,
+                    no_hp: phone,
+                    keterangan: profesi,
                 }
-                dispatch(addContact(data) as never)
+                dispatch(addKontak(data) as never)
                 setIsVisible(false)
                 clearForm()
 
@@ -154,9 +157,9 @@ const KontakDarurat = () => {
             <View style={tw`p-[24px]`}>
                 <ScrollView>
                     {
-                        dataKontak.length > 0 ?
+                        kontakData.length > 0 ?
                             (
-                                dataKontak.map((item: any, index: number) => {
+                                kontakData.map((item: any, index: number) => {
                                     return (
                                         <View key={index} style={tw`p-[14px] flex flex-row items-center bg-white shadow-sm mb-[15px]`}>
                                             <View style={tw``}>
@@ -168,19 +171,19 @@ const KontakDarurat = () => {
                                             </View>
 
                                             <View style={tw`flex-1 ml-4`}>
-                                                <Text style={tw`font-bold text-xl `}>{item?.name}</Text>
+                                                <Text style={tw`font-bold text-xl `}>{item?.nama}</Text>
 
                                                 <View style={tw`flex flex-row`}>
-                                                    <Text>{item?.profesi} | </Text>
+                                                    <Text>{item?.keterangan} | </Text>
                                                     <Text>{item?.dukuh}</Text>
                                                 </View>
-                                                <Text>{item?.phone}</Text>
+                                                <Text>{item?.no_hp}</Text>
 
                                                 <View style={tw`flex flex-row items-center mt-2`}>
                                                     <TouchableOpacity onPress={() => handleUpdate(item.key)} style={tw`px-2 py-2 border border-green-900 mr-[10px]`}>
                                                         <Text style={tw`text-base font-medium text-[#167270]`} >Ubah Data</Text>
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => handleRemove(item.key)} style={tw`px-2 py-2 border border-red-900`}>
+                                                    <TouchableOpacity onPress={() => handleRemove(item.dukuh, item.key)} style={tw`px-2 py-2 border border-red-900`}>
                                                         <Text style={tw`text-base font-medium text-[#F53319]`} >Hapus Data</Text>
                                                     </TouchableOpacity>
                                                 </View>
@@ -212,7 +215,7 @@ const KontakDarurat = () => {
                     <View style={tw` px-[18px] mt-[80px] mb-[20px]`}>
                         <Text style={tw`mb-2 mt-4 font-medium text-base`}>Padukuhan</Text>
                         <ModalSelector
-                            data={DataPadukuhan}
+                            data={listPadukuhanDropwdown}
                             initValue="Pilih Lokasi Padukuhan Anda Saat ini"
                             supportedOrientations={['landscape']}
                             onChange={(option) => {
@@ -245,7 +248,7 @@ const KontakDarurat = () => {
 
                         <Text style={tw`mb-2 mt-4 font-medium text-base`}>Nama Kontak</Text>
                         <TextInput
-                            defaultValue={currentData?.name}
+                            defaultValue={name}
                             onChangeText={(text) => setName(text)}
                             style={tw`border border-[#207729] rounded-xl px-[10px]`}
                             placeholder="Tulis nama kontak disini"
@@ -253,14 +256,14 @@ const KontakDarurat = () => {
 
                         <Text style={tw`mb-2 mt-4 font-medium text-base`}>Nomor Telepon</Text>
                         <TextInput
-                            defaultValue={currentData?.phone}
+                            defaultValue={phone}
                             onChangeText={(text) => setPhone(text)}
                             style={tw`border border-[#207729] rounded-xl px-[10px]`}
                             placeholder="Tulis nomor telepon disini"
                         />
                         <Text style={tw`mb-2 mt-4 font-medium text-base`}>Keterangan</Text>
                         <TextInput
-                            defaultValue={currentData?.profesi}
+                            defaultValue={profesi}
                             onChangeText={(text) => setProfesi(text)}
                             style={tw`border border-[#207729] rounded-xl px-[10px] justify-start `}
                             placeholder="Tulis jabatan/ptofesi kontak disini" />

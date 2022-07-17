@@ -1,24 +1,25 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Text, View, Switch, TouchableOpacity, Alert } from "react-native"
 import { useDispatch, useSelector } from "react-redux";
 import tw from 'twrnc';
-import { updateStatus } from "../../redux/action/merapi";
-import { RootState } from "../../redux/reducer";
+import { loadStatus, RootState, updateStatus } from "../../store";
+
+
+
 
 const StatusMerapi = () => {
     const dispatch = useDispatch()
-
-    const merapiStatus = useSelector((state: RootState) => state.merapi.status)
+    const statusMerapi = useSelector((state: RootState) => state.merapi.status)
     const [status, setStatus] = useState("")
-    const [loading] = useState(false)
 
-    React.useEffect(() => {
-        setStatus(merapiStatus)
-    }, [merapiStatus])
+    useEffect(() => {
+        dispatch(loadStatus() as never)
+        setStatus(statusMerapi)
+    }, [statusMerapi])
 
 
-    const submitStatus = async () => {
-        await dispatch(updateStatus(status))
+    const submitStatus = () => {
+        dispatch(updateStatus({ status }) as never)
     }
 
 

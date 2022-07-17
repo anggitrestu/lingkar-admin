@@ -1,38 +1,37 @@
 import React, { useEffect, useState } from "react"
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Modal, Button, TextInput, Alert } from "react-native"
+import { Text, View, TouchableOpacity, ScrollView, Modal, Button, TextInput, Alert } from "react-native"
 import { IconTrash, IconArrowLeftWhite } from "../../assets";
 import tw from 'twrnc';
 import { RootStackParamList } from '../../navigation/InformasiStatusNavigation'
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from "@react-navigation/native";
-import { addInfo, getInfo, removeInfo } from "../../api/merapi";
+import { addInfo, RootState, getInfo, removeInfo } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+
 
 type Props = NativeStackScreenProps<RootStackParamList, 'DetailStatus'>;
 
 const DetailStatus = ({ route, navigation }: Props) => {
-
+    const dispatch = useDispatch();
+    const info = useSelector((state: RootState) => state.merapi.infos);
     const [isVisible, setIsVisible] = useState(false)
-    const [infos, setInfos] = useState([])
-
     const [detail, setDetail] = useState("")
 
-    const loadInfo = async () => {
-        const result = await getInfo(route.params.status)
-        setInfos(result as never)
-    }
-
     useEffect(() => {
-        loadInfo()
-    }, [useIsFocused()])
+        dispatch(getInfo(route.params.status) as never)
+    }, [useIsFocused])
 
 
-    const confirmDeleteStatusDetail = (status: string, id: string) => {
+    const confirmDeleteStatusDetail = (status: string, key: string) => {
         Alert.alert(
             'Hapus Informasi',
             'Apakah anda yakin ingin menghapus informasi ini?',
             [
                 { text: 'Batal', style: 'cancel' },
-                { text: 'OK', onPress: () => removeInfo(status, id).then(() => loadInfo()) },
+                {
+                    text: 'OK', onPress: () =>
+                        dispatch(removeInfo({ status, key }) as never)
+                },
             ],
             {
                 cancelable: true,
@@ -48,12 +47,12 @@ const DetailStatus = ({ route, navigation }: Props) => {
             return
         }
         if (route.params.status && detail) {
-            addInfo(route.params.status, detail)
-                .then(() => {
-                    loadInfo()
-                    setIsVisible(false)
-                })
-                .catch(() => Alert.alert('Gagal menambahkan informasi'))
+            dispatch(addInfo({ status: route.params.status, info: detail }) as never)
+            setIsVisible(false)
+            // .then(() => {
+            //     loadInfo()
+            // })
+            // .catch(() => Alert.alert('Gagal menambahkan informasi'))
         }
         setDetail("")
     }
@@ -82,9 +81,9 @@ const DetailStatus = ({ route, navigation }: Props) => {
                 </View>
 
                 {
-                    infos?.length > 0 ?
+                    info?.length > 0 ?
                         (
-                            infos.map((item: any, index: number) => {
+                            info.map((item: any, index: number) => {
                                 return (
                                     <View key={index} style={tw`flex flex-row min-h-[50px] w-full pr-[10px] mb-[15px]`}>
                                         <TouchableOpacity onPress={() => confirmDeleteStatusDetail(route.params.status, item?.key)}>

@@ -1,12 +1,11 @@
 import { useIsFocused } from "@react-navigation/native"
 import React, { useEffect, useState } from "react"
-import { Text, View, TouchableOpacity, ScrollView, Dimensions, Modal, TextInput, Button, Alert, ActivityIndicator } from "react-native"
+import { Text, View, TouchableOpacity, ScrollView, Dimensions, Modal, TextInput, Button, Alert } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import tw from "twrnc"
-import { addNews } from '../../api/news'
-import { getNews, updateNews, removeNews } from "../../redux/action/news"
-import { RootState } from "../../redux/reducer"
-const { height, width } = Dimensions.get("window")
+const { width } = Dimensions.get("window")
+import { RootState, addBerita, loadBerita, updateBerita, removeBerita } from '../../store'
+
 
 
 
@@ -18,27 +17,22 @@ type dataBeritaProps = {
     date?: string,
 }
 
-
-const defaultBerita: dataBeritaProps = {
-    key: "",
-    title: "",
-    highlight: "",
-    body: "",
-    date: "",
-}
-
 const BeritaMerapi = () => {
-    const news = useSelector((state: RootState) => state.news.news)
+
     const dispatch = useDispatch()
+    const beritaData = useSelector((state: RootState) => state.berita.berita)
+
+    useEffect(() => {
+        dispatch(loadBerita() as never)
+    }, [useIsFocused])
 
     const [isVisible, setIsVisible] = useState(false)
-    const [dataBerita, setDataBerita] = useState<dataBeritaProps[]>([])
-
     const [isEdit, setIsEdit] = useState(false)
 
     const [judul, setJudul] = useState("")
     const [ringkasan, setRingkasan] = useState("")
     const [isiBerita, setIsiBerita] = useState("")
+
 
     const [currentData, setCurrentData] = useState<dataBeritaProps>({
         key: "",
@@ -49,9 +43,6 @@ const BeritaMerapi = () => {
 
     })
 
-    useEffect(() => {
-        setDataBerita(news)
-    }, [news])
 
     const handleTambahBerita = (judul: string, ringkasan: string, isiBerita: string,) => {
         if (judul === "" || ringkasan === "" || isiBerita === "") {
@@ -59,21 +50,18 @@ const BeritaMerapi = () => {
             return
         }
         if (isEdit) {
-            dispatch(updateNews(currentData.key, judul, ringkasan, isiBerita) as never)
+            dispatch(updateBerita({ key: currentData.key, judul: judul, konten: isiBerita, ringkasan: ringkasan }) as never)
             setIsEdit(false)
             setIsVisible(false)
             clearForm()
         } else {
             const data = {
-                title: judul,
-                highlight: ringkasan,
-                body: isiBerita
+                judul: judul,
+                ringkasan: ringkasan,
+                konten: isiBerita
             }
-            addNews(data.title, data.highlight, data.body)
-                .then(() => {
-                    dispatch(getNews() as never)
-                })
-                .catch(() => Alert.alert('Gagal menambahkan Berita'))
+
+            dispatch(addBerita({ judul, ringkasan, konten: isiBerita }) as never)
             clearForm()
             setIsVisible(false)
         }
@@ -94,11 +82,11 @@ const BeritaMerapi = () => {
     const showUpdateBerita = (key: string) => {
         setIsVisible(true)
         setIsEdit(true)
-        const data = dataBerita.find((item: any) => item.key === key)
+        const data = beritaData.find((item: any) => item.key === key)
         if (data) {
-            setJudul(data?.title || "")
-            setRingkasan(data?.highlight || "")
-            setIsiBerita(data?.body || "")
+            setJudul(data.judul)
+            setRingkasan(data.ringkasan)
+            setIsiBerita(data.konten)
             setCurrentData(data)
         }
     }
@@ -112,7 +100,7 @@ const BeritaMerapi = () => {
                 { text: 'Batal', style: 'cancel' },
                 {
                     text: 'OK', onPress: () => {
-                        dispatch(removeNews(key) as never)
+                        dispatch(removeBerita({ key }) as never)
                         clearForm()
                         setIsVisible(false)
                     }
@@ -134,9 +122,9 @@ const BeritaMerapi = () => {
             <View style={tw`p-[24px]`}>
                 <ScrollView>
                     {
-                        dataBerita.length > 0 ?
+                        beritaData.length > 0 ?
                             (
-                                dataBerita.map((item: any, index: number) => {
+                                beritaData.map((item: any, index: number) => {
                                     return (
                                         <TouchableOpacity onPress={() => showUpdateBerita(item.key)} style={tw`rounded-xl mb-[20px]`} key={index}>
                                             <View style={tw`flex flex-row bg-white rounded-xl`}>
@@ -145,14 +133,14 @@ const BeritaMerapi = () => {
                                                 </View>
                                                 {/* description */}
                                                 <View style={tw`ml-4 py-[10px] w-[${width * 0.7}px]`}>
-                                                    <Text style={tw`text-gray-600 text-xl font-bold mb-2`}> {item?.title} </Text>
+                                                    <Text style={tw`text-gray-600 text-xl font-bold mb-2`}> {item?.judul} </Text>
                                                     <Text style={tw`text-gray-400 overflow-hidden mb-1 text-justify`}>
-                                                        {item?.highlight}
+                                                        {item?.ringkasan}
                                                     </Text>
                                                     <Text style={tw`text-gray-400 overflow-hidden mb-3 text-justify`}>
-                                                        {item?.body}
+                                                        {item?.konten}
                                                     </Text>
-                                                    <Text style={tw`text-gray-400 text-xs`}>{item?.date}</Text>
+                                                    <Text style={tw`text-gray-400 text-xs`}>{item?.tanggal}</Text>
                                                 </View>
                                             </View>
                                         </TouchableOpacity>
@@ -186,19 +174,19 @@ const BeritaMerapi = () => {
                     <View style={tw` px-[18px] mt-[80px] mb-[20px]`}>
                         <Text style={tw`mb-2 mt-4 font-medium text-base`}>Judul Berita</Text>
                         <TextInput
-                            defaultValue={currentData?.title}
+                            defaultValue={judul}
                             onChangeText={(text) => setJudul(text)}
                             style={tw`border border-[#207729] rounded-xl px-[10px]`}
                             placeholder="Tulis judul berita disini" />
                         <Text style={tw`mb-2 mt-4 font-medium text-base`}>Ringkasan</Text>
                         <TextInput
-                            defaultValue={currentData?.highlight}
+                            defaultValue={ringkasan}
                             onChangeText={(text) => setRingkasan(text)}
                             style={tw`border border-[#207729] rounded-xl px-[10px]`}
                             placeholder="Tulis ringkasan berita disini" />
                         <Text style={tw`mb-2 mt-4 font-medium text-base`}>Isi Berita</Text>
                         <TextInput
-                            defaultValue={currentData?.body}
+                            defaultValue={isiBerita}
                             multiline={true}
                             numberOfLines={4}
                             onChangeText={(text) => setIsiBerita(text)}
