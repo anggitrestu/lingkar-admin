@@ -13,7 +13,7 @@ type PadukuhanLoadAction = {
 
 type PadukuhanSelectAction = {
   type: typeof PADUKUHAN_SELECT;
-  payload: PadukuhanType;
+  payload: string;
 };
 
 export type PadukuhanActionTypes = PadukuhanLoadAction | PadukuhanSelectAction;

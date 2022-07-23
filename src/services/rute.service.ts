@@ -1,12 +1,10 @@
 import {API_URL} from '../config/config';
 import {RuteType, PadukuhanType} from '../store/types';
 
+export type dukuhTypeProps = PadukuhanType[];
 
-export type dukuhTypeProps = PadukuhanType[]
-
-async function loadRute(dukuh : dukuhTypeProps) {
+async function loadRute(dukuh: dukuhTypeProps) {
   try {
-
     const rute: RuteType = {
       pengungsian: [],
       titik_kumpul: [],
@@ -15,7 +13,6 @@ async function loadRute(dukuh : dukuhTypeProps) {
     for (const duku of dukuh) {
       const response = await fetch(`${API_URL}/rute/${duku.nama}.json`);
       const data = await response.json();
-      console.log('duku data', data);
       if (data !== null) {
         if (data.pengungsian) {
           for (const key in data.pengungsian) {
@@ -26,7 +23,7 @@ async function loadRute(dukuh : dukuhTypeProps) {
               latitude: data.pengungsian[key].latitude,
               longitude: data.pengungsian[key].longitude,
               dukuh: duku.nama,
-              tipe: "Pengungsian"
+              tipe: 'Pengungsian',
             });
           }
         }
@@ -39,7 +36,7 @@ async function loadRute(dukuh : dukuhTypeProps) {
               latitude: data.titik_kumpul[key].latitude,
               longitude: data.titik_kumpul[key].longitude,
               dukuh: duku.nama,
-              tipe: "Titik Kumpul"
+              tipe: 'Titik Kumpul',
             });
           }
         }
@@ -53,6 +50,7 @@ async function loadRute(dukuh : dukuhTypeProps) {
 }
 
 type inputAddRute = {
+  key?: string;
   dukuh: string;
   tipe: string;
   nama: string;
@@ -70,6 +68,7 @@ async function addRute({
   longitude,
 }: inputAddRute) {
   try {
+    dukuh = dukuh.toLowerCase();
     tipe = tipe.toLowerCase();
     tipe = tipe.replace(/ /g, '_');
     const response = await fetch(`${API_URL}/rute/${dukuh}/${tipe}.json`, {
@@ -92,6 +91,42 @@ async function addRute({
   }
 }
 
+// update rute
+async function updateRute({
+  key,
+  dukuh,
+  tipe,
+  nama,
+  deskripsi,
+  latitude,
+  longitude,
+}: inputAddRute) {
+  try {
+    dukuh = dukuh.toLowerCase();
+    tipe = tipe.toLowerCase();
+    tipe = tipe.replace(/ /g, '_');
+    const response = await fetch(
+      `${API_URL}/rute/${dukuh}/${tipe}/${key}.json`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nama,
+          deskripsi,
+          latitude,
+          longitude,
+        }),
+      },
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.log('error', error);
+  }
+}
+
 async function deleteRute({
   dukuh,
   tipe,
@@ -102,8 +137,7 @@ async function deleteRute({
   key: string;
 }) {
   try {
-    console.log("rute", dukuh, tipe, key)
-    // convert tipe from Titik Kumpul to titik_kumpul
+    dukuh = dukuh.toLowerCase();
     tipe = tipe.toLowerCase();
     tipe = tipe.replace(/ /g, '_');
     const response = await fetch(
@@ -122,8 +156,56 @@ async function deleteRute({
   }
 }
 
+async function loadRuteByDukuh({dukuh}: {dukuh: string}) {
+  try {
+    dukuh = dukuh.toLowerCase();
+    const response = await fetch(`${API_URL}/rute/${dukuh}.json`);
+    const data = await response.json();
+    const result: RuteType = {
+      pengungsian: [],
+      titik_kumpul: [],
+    };
+
+    if (data !== null) {
+      if (data.pengungsian) {
+        for (const key in data.pengungsian) {
+          result.pengungsian.push({
+            key,
+            nama: data.pengungsian[key].nama,
+            deskripsi: data.pengungsian[key].deskripsi,
+            latitude: data.pengungsian[key].latitude,
+            longitude: data.pengungsian[key].longitude,
+            dukuh: dukuh,
+            tipe: 'Pengungsian',
+          });
+        }
+      }
+
+      if (data.titik_kumpul) {
+        for (const key in data.titik_kumpul) {
+          result.titik_kumpul.push({
+            key,
+            nama: data.titik_kumpul[key].nama,
+            deskripsi: data.titik_kumpul[key].deskripsi,
+            latitude: data.titik_kumpul[key].latitude,
+            longitude: data.titik_kumpul[key].longitude,
+            dukuh: dukuh,
+            tipe: 'Titik Kumpul',
+          });
+        }
+      }
+    }
+
+    return result;
+  } catch (error) {
+    console.log('error', error);
+  }
+}
+
 export const ruteService = {
   loadRute,
   deleteRute,
+  loadRuteByDukuh,
   addRute,
+  updateRute,
 };

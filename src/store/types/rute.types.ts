@@ -14,10 +14,16 @@ export type RuteType = {
 };
 
 export const RUTE_LOAD = 'RUTE_LOAD';
+export const RUTE_SELECT = 'RUTE_SELECT';
 
 type RuteLoadAction = {
   type: typeof RUTE_LOAD;
   payload: RuteType;
 };
 
-export type RuteActionTypes = RuteLoadAction;
+type RuteSelectAction = {
+  type: typeof RUTE_SELECT;
+  payload: string;
+};
+
+export type RuteActionTypes = RuteLoadAction | RuteSelectAction;

@@ -7,10 +7,12 @@ import {
 
 type PadukuhanState = {
   list: PadukuhanType[];
+  selected: string;
 };
 
 const initialState: PadukuhanState = {
   list: [],
+  selected: '',
 };
 
 export function padukuhanReducer(
@@ -22,6 +24,11 @@ export function padukuhanReducer(
       return {
         ...state,
         list: action.payload,
+      };
+    case PADUKUHAN_SELECT:
+      return {
+        ...state,
+        selected: action.payload,
       };
     default:
       return state;

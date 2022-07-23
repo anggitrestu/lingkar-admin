@@ -38,7 +38,7 @@ const KontakDarurat = ({ navigation }: Props) => {
 
     useEffect(() => {
         dispatch(loadKontak() as never)
-    }, [useIsFocused])
+    }, [useIsFocused()])
 
 
 

@@ -64,11 +64,15 @@ const TambahBeritaMerapi = ({ route, navigation }: Props) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#F5F5F5' }}>
-            <ScrollView style={tw`px-[24] mt-[24px]`}>
-                <View style={tw`p-[12px] rounded-xl border border-[#207729] mb-[20px]`}>
-                    <Text style={tw`text-base font-bold text-[#207729] text-center`}>{`${isEdit ? "Perbarui" : "Tambahkan"} Berita Merapi`}</Text>
-                </View>
-
+  
+            <View style={tw`bg-[#167270] flex flex-row items-center `}>
+                <TouchableOpacity style={tw`w-[40px] h-[32px] justify-center px-[22px]`} onPress={() => navigation.goBack()} >
+                    <IconArrowLeftWhite />
+                </TouchableOpacity>
+                <Text style={tw`ml-[24px] text-white font-bold text-xl py-[10px]`}>{`${isEdit ? "Perbarui" : "Tambahkan"} Berita`}</Text>
+            </View>
+            
+            <ScrollView style={tw`px-[24] mt-[8px]`}>
                 {/* judul */}
                 <TextField
                     label="Judul"
@@ -91,11 +95,11 @@ const TambahBeritaMerapi = ({ route, navigation }: Props) => {
                     multiline={true}
                     numberOfLines={10}
                     textAlignVertical="top"
-                    style={{ minHeight: height * 0.5, justifyContent: 'flex-start' }}
+                    style={{ minHeight: height * 0.3, justifyContent: 'flex-start' }}
                 />
 
-                <TouchableOpacity onPress={() => handleTambahBerita(judul, ringkasan, isiBerita)} style={tw`bg-[#167270]  flex justify-center items-center `}>
-                    <Text style={tw`text-white text-base font-bold p-[10px] rounded-sm `} >{isEdit ? "Simpan" : "Tambah"}</Text>
+                <TouchableOpacity onPress={() => handleTambahBerita(judul, ringkasan, isiBerita)} style={tw`bg-[#167270] rounded-xl flex justify-center items-center my-[20px]`}>
+                    <Text style={tw`text-white text-base font-bold p-[10px] `} >{isEdit ? "Simpan" : "Tambah"}</Text>
                 </TouchableOpacity>
 
                 <View style={tw`mb-[100px]`}></View>

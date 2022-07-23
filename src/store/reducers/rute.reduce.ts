@@ -1,7 +1,8 @@
-import {RuteActionTypes, RuteType, RUTE_LOAD} from '../types';
+import {RuteActionTypes, RuteType, RUTE_LOAD, RUTE_SELECT} from '../types';
 
 type RuteState = {
   rute: RuteType;
+  selected: string;
 };
 
 const initialState: RuteState = {
@@ -9,6 +10,7 @@ const initialState: RuteState = {
     pengungsian: [],
     titik_kumpul: [],
   },
+  selected: '',
 };
 
 export function ruteReducer(
@@ -22,6 +24,11 @@ export function ruteReducer(
         rute: action.payload,
       };
 
+    case RUTE_SELECT:
+      return {
+        ...state,
+        selected: action.payload,
+      };
     default:
       return state;
   }

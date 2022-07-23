@@ -11,19 +11,10 @@ import { Text, TextField } from "../../component";
 import ModalSelector from "react-native-modal-selector";
 import { camelCase } from "../../utils/string";
 import { PadukuhanType } from "../../store/types";
+import { color } from "../../theme";
 const { height, width } = Dimensions.get('screen')
 
-
 type Props = NativeStackScreenProps<RootStackParamList, 'UpdateKontakDarurat'>;
-
-type dataBeritaProps = {
-    key: string,
-    title?: string,
-    highlight?: string,
-    body?: string,
-    date?: string,
-}
-
 
 const UpdateKontakDarurat = ({ route, navigation }: Props) => {
     const dispatch = useDispatch();
@@ -86,11 +77,14 @@ const UpdateKontakDarurat = ({ route, navigation }: Props) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#F5F5F5' }}>
-            <ScrollView style={tw`px-[24] mt-[24px]`}>
-                <View style={tw`p-[12px] rounded-xl border border-[#207729] mb-[20px]`}>
-                    <Text style={tw`text-base font-bold text-[#207729] text-center`}>{`${isEdit ? "Perbarui" : "Tambahkan"} Kontak Darurat`}</Text>
-                </View>
+            <View style={tw`bg-[#167270] flex flex-row items-center `}>
+                <TouchableOpacity style={tw`w-[40px] h-[32px] justify-center px-[22px]`} onPress={() => navigation.goBack()} >
+                    <IconArrowLeftWhite />
+                </TouchableOpacity>
+                <Text style={tw`ml-[24px] text-white font-bold text-xl py-[10px]`}>{`${isEdit ? "Perbarui" : "Tambah"} Kontak Darurat`}</Text>
+            </View>
 
+            <ScrollView style={tw`px-[24] mt-[24px]`}>
                 <Text style={tw`mb-2 mt-4 font-medium text-base`}>Padukuhan</Text>
                 <ModalSelector
                     data={listPadukuhanDropwdown}
@@ -105,7 +99,7 @@ const UpdateKontakDarurat = ({ route, navigation }: Props) => {
                         setDukuh("");
                     }}
                 >
-                    <View style={tw`border border-[#207729] rounded-xl px-[10px] py-[15px]`}>
+                    <View style={tw`bg-[${color.palette.lighterGrey}] rounded-xl px-[10px] py-[15px]`}>
                         {
                             dukuh === "" ?
                                 (
@@ -148,13 +142,7 @@ const UpdateKontakDarurat = ({ route, navigation }: Props) => {
                     onChangeText={(text) => setKeterangan(text)}
                 />
 
-
-
-
-
-
-
-                <TouchableOpacity onPress={() => onSubmit()} style={tw`bg-[#167270]  flex justify-center items-center `}>
+                <TouchableOpacity onPress={() => onSubmit()} style={tw`bg-[#167270] rounded-xl  flex justify-center items-center my-[20px] `}>
                     <Text style={tw`text-white text-base font-bold p-[10px] rounded-sm `} >{isEdit ? "Simpan" : "Tambah"}</Text>
                 </TouchableOpacity>
 

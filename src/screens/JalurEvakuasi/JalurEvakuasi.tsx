@@ -115,7 +115,7 @@ const JalurEvakuasi = () => {
     useEffect(() => {
         console.log("useEffect")
         dispatch(loadRute(padukuhan) as never)
-    }, [useIsFocused])
+    }, [useIsFocused()])
 
 
     return (
@@ -142,14 +142,14 @@ const JalurEvakuasi = () => {
                                                 Buka Peta
                                             </Text>
                                         </View>
-                                        <Text style={tw`font-medium text-base mt-2`}>
+                                        <Text style={tw`font-medium text-black text-base mt-2`}>
                                             {item.deskripsi}
                                         </Text>
                                         <View style={tw`flex flex-row`}>
-                                            <Text style={tw`font-medium text-sm mt-1 mr-4`}>
+                                            <Text style={tw`font-medium text-black text-sm mt-1 mr-4`}>
                                                 {item.latitude}
                                             </Text>
-                                            <Text style={tw`font-medium text-sm mt-1`}>
+                                            <Text style={tw`font-medium text-black text-sm mt-1`}>
                                                 {item.longitude}
                                             </Text>
                                         </View>
@@ -188,22 +188,22 @@ const JalurEvakuasi = () => {
                                                 Buka Peta
                                             </Text>
                                         </View>
-                                        <Text style={tw`font-medium text-base mt-2`}>
+                                        <Text style={tw`font-medium text-black text-base mt-2`}>
                                             {item.deskripsi}
                                         </Text>
                                         <View style={tw`flex flex-row`}>
-                                            <Text style={tw`font-medium text-sm mt-1 mr-4`}>
+                                            <Text style={tw`font-medium text-black text-sm mt-1 mr-4`}>
                                                 {item.latitude}
                                             </Text>
-                                            <Text style={tw`font-medium text-sm mt-1`}>
+                                            <Text style={tw`font-medium text-black text-sm mt-1`}>
                                                 {item.longitude}
                                             </Text>
                                         </View>
                                         <View style={tw`flex flex-row`}>
-                                            <Text style={tw`font-medium text-sm mt-1 mr-4`}>
+                                            <Text style={tw`font-medium text-black text-sm mt-1 mr-4`}>
                                                 {item.dukuh}
                                             </Text>
-                                            <Text style={tw`font-medium text-sm mt-1`}>
+                                            <Text style={tw`font-medium text-black text-sm mt-1`}>
                                                 {item.tipe}
                                             </Text>
                                         </View>
@@ -225,7 +225,7 @@ const JalurEvakuasi = () => {
             >
                 <ScrollView>
                     <View style={tw`rounded-xl shadow w-[80%] mx-auto mt-[50px] bg-white`}>
-                        <View style={tw`bg-[#167270] rounded-t-xl h-[60px] p-[16px] flex flex-row absolute inset-x-0 top-0 justify-between`}>
+                        <View style={tw`bg-[#167270] rounded-t-xl min-h-[60px] p-[16px] flex flex-row absolute inset-x-0 top-0 justify-between`}>
                             <Text style={tw`text-white text-xl font-bold`}>{"Tambah Rute"}</Text>
                             <TouchableOpacity onPress={() => setIsVisible(false)} style={tw`bg-white rounded-full h-[32px] w-[32px] rounded-full flex justify-center items-center`}>
                                 <Text style={tw`text-[#167270] text-base font-bold`}>X</Text>

@@ -20,8 +20,7 @@ const DetailStatus = ({ route, navigation }: Props) => {
 
     useEffect(() => {
         dispatch(getInfo(route.params.status) as never)
-    }, [useIsFocused])
-
+    }, [useIsFocused()])
 
     const confirmDeleteStatusDetail = (status: string, key: string) => {
         Alert.alert(
@@ -61,7 +60,7 @@ const DetailStatus = ({ route, navigation }: Props) => {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#F5F5F5' }}>
-            <View style={tw`h-[56px] bg-[#167270]`}>
+            <View style={tw`min-h-[56px] bg-[#167270]`}>
                 <View style={tw`flex flex-row p-[16px]`}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <IconArrowLeftWhite width={20} height={20} />

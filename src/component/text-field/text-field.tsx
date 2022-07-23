@@ -5,7 +5,7 @@ import { Text } from "../text/text"
 
 // the base styling for the container
 const CONTAINER: ViewStyle = {
-  paddingVertical: spacing[3],
+  paddingVertical: spacing[2],
 }
 
 // the base styling for the TextInput
@@ -16,6 +16,8 @@ const INPUT: TextStyle = {
   fontSize: 16,
   backgroundColor: color.palette.lighterGrey,
   paddingHorizontal: spacing[2],
+  borderRadius: 8,
+  marginTop: 2,
 }
 
 // currently we have no presets, but that changes quickly when you build your app.
@@ -83,7 +85,7 @@ export function TextField(props: TextFieldProps) {
 
   return (
     <View style={containerStyles}>
-      <Text preset="fieldLabel" text={label} />
+      <Text preset="h4" text={label} />
       <TextInput
         placeholder={actualPlaceholder}
         placeholderTextColor={'#667085'}
