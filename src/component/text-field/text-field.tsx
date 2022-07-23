@@ -13,8 +13,9 @@ const INPUT: TextStyle = {
   fontFamily: typography.primary,
   color: color.darkGray,
   minHeight: 44,
-  fontSize: 18,
+  fontSize: 16,
   backgroundColor: color.palette.lighterGrey,
+  paddingHorizontal: spacing[2],
 }
 
 // currently we have no presets, but that changes quickly when you build your app.
@@ -85,7 +86,7 @@ export function TextField(props: TextFieldProps) {
       <Text preset="fieldLabel" text={label} />
       <TextInput
         placeholder={actualPlaceholder}
-        placeholderTextColor={color.darkGray}
+        placeholderTextColor={'#667085'}
         underlineColorAndroid={color.transparent}
         {...rest}
         style={inputStyles}

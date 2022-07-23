@@ -24,22 +24,19 @@ type dataBeritaProps = {
 
 const TambahBeritaMerapi = ({ route, navigation }: Props) => {
     const dispatch = useDispatch();
+    const isEdit = route.params?.idEdit ?? false;
+    const data = {
+        key: route.params?.data?.key ?? '',
+        judul: route.params?.data?.judul ?? '',
+        ringkasan: route.params?.data?.ringkasan ?? '',
+        isi: route.params?.data?.isi ?? '',
+    }
+    const [key, setKey] = useState(data.key)
+    const [judul, setJudul] = useState(data.judul)
+    const [ringkasan, setRingkasan] = useState(data.ringkasan)
+    const [isiBerita, setIsiBerita] = useState(data.isi)
 
-    const [isVisible, setIsVisible] = useState(false)
-    const [isEdit, setIsEdit] = useState(false)
 
-    const [judul, setJudul] = useState("")
-    const [ringkasan, setRingkasan] = useState("")
-    const [isiBerita, setIsiBerita] = useState("")
-
-
-    const [currentData, setCurrentData] = useState<dataBeritaProps>({
-        key: "",
-        title: "",
-        body: "",
-        date: "",
-        highlight: "",
-    })
 
     const handleTambahBerita = (judul: string, ringkasan: string, isiBerita: string,) => {
         if (judul === "" || ringkasan === "" || isiBerita === "") {
@@ -47,17 +44,10 @@ const TambahBeritaMerapi = ({ route, navigation }: Props) => {
             return
         }
         if (isEdit) {
-            dispatch(updateBerita({ key: currentData.key, judul: judul, konten: isiBerita, ringkasan: ringkasan }) as never)
-            setIsEdit(false)
-            setIsVisible(false)
+            dispatch(updateBerita({ key: key, judul: judul, konten: isiBerita, ringkasan: ringkasan }) as never)
+            navigation.goBack()
             clearForm()
         } else {
-            const data = {
-                judul: judul,
-                ringkasan: ringkasan,
-                konten: isiBerita
-            }
-
             dispatch(addBerita({ judul, ringkasan, konten: isiBerita }) as never)
             navigation.goBack()
             clearForm()
@@ -69,12 +59,6 @@ const TambahBeritaMerapi = ({ route, navigation }: Props) => {
         setJudul("")
         setRingkasan("")
         setIsiBerita("")
-        setCurrentData({
-            key: "",
-            title: "",
-            body: "",
-            date: "",
-        })
     }
 
 
@@ -82,15 +66,8 @@ const TambahBeritaMerapi = ({ route, navigation }: Props) => {
         <View style={{ flex: 1, backgroundColor: '#F5F5F5' }}>
             <ScrollView style={tw`px-[24] mt-[24px]`}>
                 <View style={tw`p-[12px] rounded-xl border border-[#207729] mb-[20px]`}>
-                    <Text style={tw`text-base font-bold text-[#207729] text-center`}>{`Tambahkan Berita Merapi`}</Text>
+                    <Text style={tw`text-base font-bold text-[#207729] text-center`}>{`${isEdit ? "Perbarui" : "Tambahkan"} Berita Merapi`}</Text>
                 </View>
-
-                {/* <TextField
-                    label="Detail Status"
-                    value={detail}
-                    onChangeText={(text) => setDetail(text)}
-                    multiline={true}
-                /> */}
 
                 {/* judul */}
                 <TextField
@@ -118,7 +95,7 @@ const TambahBeritaMerapi = ({ route, navigation }: Props) => {
                 />
 
                 <TouchableOpacity onPress={() => handleTambahBerita(judul, ringkasan, isiBerita)} style={tw`bg-[#167270]  flex justify-center items-center `}>
-                    <Text style={tw`text-white text-base font-bold p-[10px] rounded-sm `} >Tambah</Text>
+                    <Text style={tw`text-white text-base font-bold p-[10px] rounded-sm `} >{isEdit ? "Simpan" : "Tambah"}</Text>
                 </TouchableOpacity>
 
                 <View style={tw`mb-[100px]`}></View>

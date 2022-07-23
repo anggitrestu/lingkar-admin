@@ -129,26 +129,49 @@ const BeritaMerapi = ({ navigation }: Props) => {
                     {
                         beritaData.length > 0 ?
                             (
-                                beritaData.map((item: any, index: number) => {
+                                beritaData.map((item, index: number) => {
                                     return (
-                                        <TouchableOpacity onPress={() => showUpdateBerita(item.key)} style={tw`rounded-xl mb-[20px]`} key={index}>
+                                        //  onPress={() => showUpdateBerita(item.key)} 
+                                        <View style={tw`rounded-xl mb-[20px]`} key={index}>
                                             <View style={tw`flex flex-row bg-white rounded-xl`}>
                                                 {/* profile picture */}
                                                 <View style={tw`bg-green-900 rounded-l-xl w-[20px]`}>
                                                 </View>
                                                 {/* description */}
                                                 <View style={tw`ml-4 py-[10px] w-[${width * 0.7}px]`}>
-                                                    <Text style={tw`text-gray-600 text-xl font-bold mb-2`}> {item?.judul} </Text>
+                                                    <Text style={tw`text-gray-600 text-base font-bold mb-2`}> {item?.judul} </Text>
                                                     <Text style={tw`text-gray-400 overflow-hidden mb-1 text-justify`}>
                                                         {item?.ringkasan}
                                                     </Text>
-                                                    <Text style={tw`text-gray-400 overflow-hidden mb-3 text-justify`}>
+                                                    {/* <Text style={tw`text-gray-400 overflow-hidden mb-3 text-justify`}>
                                                         {item?.konten}
-                                                    </Text>
+                                                    </Text> */}
                                                     <Text style={tw`text-gray-400 text-xs`}>{item?.tanggal}</Text>
+                                                    <View style={tw`flex flex-row`}>
+                                                        <TouchableOpacity
+                                                            onPress={() => {
+                                                                navigation.navigate('TambahBeritaMerapi', {
+                                                                    idEdit: true,
+                                                                    data: {
+                                                                        judul: item.judul,
+                                                                        ringkasan: item.ringkasan,
+                                                                        isi: item.konten,
+                                                                        key: item.key,
+                                                                    }
+                                                                })
+                                                            }}
+                                                        >
+                                                            <Text style={tw`text-blue-800 underline text-sm mt-2 mr-4 `}>Ubah</Text>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity
+                                                            onPress={() => handleDeleteBerita(item?.key)}
+                                                        >
+                                                            <Text style={tw`text-red-800 underline text-sm mt-2  `}>Hapus</Text>
+                                                        </TouchableOpacity>
+                                                    </View>
                                                 </View>
                                             </View>
-                                        </TouchableOpacity>
+                                        </View>
                                     )
                                 })
                             ) : (
@@ -213,15 +236,20 @@ const BeritaMerapi = ({ navigation }: Props) => {
             {/* button add card in bottom of screen */}
             <TouchableOpacity
                 onPress={() => {
-                    // setIsEdit(false)
-                    // setIsVisible(true)
-                    // clearForm()
-                    navigation.navigate('TambahBeritaMerapi')
+                    navigation.navigate('TambahBeritaMerapi', {
+                        idEdit: false,
+                        data: {
+                            judul: '',
+                            ringkasan: '',
+                            isi: "",
+                            key: "",
+                        }
+                    })
                 }}
                 style={tw`bg-[#167270] rounded-full absolute bottom-[20px] right-[20px] h-12 w-12 flex justify-center items-center `}>
                 <Text style={tw`text-white text-4xl font-bold`} >+</Text>
             </TouchableOpacity>
-        </View>
+        </View >
 
     )
 }

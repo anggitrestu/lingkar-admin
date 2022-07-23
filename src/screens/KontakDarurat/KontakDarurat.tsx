@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Text, View, TouchableOpacity, ScrollView, Dimensions, Image, Modal, TextInput, Alert, Button, StyleSheet } from "react-native"
+import { View, TouchableOpacity, ScrollView, Dimensions, Image, Modal, TextInput, Alert, Button, StyleSheet } from "react-native"
 import tw from "twrnc"
 import { imageProfile } from "../../assets"
 const { height, width } = Dimensions.get("window")
@@ -8,6 +8,9 @@ import { useDispatch, useSelector } from "react-redux"
 import { loadKontak, RootState, addKontak, removeKontak, updateKontak } from "../../store"
 import { PadukuhanType } from "../../store/types"
 import { useIsFocused } from "@react-navigation/native"
+import { Text } from "../../component"
+import { RootStackParamList } from "../../navigation/KontakDaruratNavigation"
+import { NativeStackScreenProps } from "@react-navigation/native-stack"
 
 
 type kontakDaruratType = {
@@ -26,20 +29,18 @@ const defaultCurrentState: kontakDaruratType = {
     profesi: "",
 }
 
-const KontakDarurat = () => {
-    const padukuhan = useSelector((state: RootState) => state.padukuhan.list)
+type Props = NativeStackScreenProps<RootStackParamList, 'UpdateKontakDarurat'>;
+
+
+const KontakDarurat = ({ navigation }: Props) => {
+
     const kontakData = useSelector((state: RootState) => state.kontak.kontak)
 
     useEffect(() => {
         dispatch(loadKontak() as never)
     }, [useIsFocused])
 
-    const listPadukuhanDropwdown = padukuhan.map((item: PadukuhanType) => {
-        return {
-            key: item.key,
-            label: item.nama,
-        }
-    })
+
 
     const [isVisible, setIsVisible] = useState(false)
     const [isEdit, setIsEdit] = useState(false)
@@ -62,7 +63,8 @@ const KontakDarurat = () => {
     }
 
     const clearForm = () => {
-        setCurrentDataPadukuhan("")
+
+        ("")
         setName("")
         setPhone("")
         setProfesi("")
@@ -103,7 +105,8 @@ const KontakDarurat = () => {
         setIsVisible(true)
         const data = kontakData.find((item: any) => item.key === key)
         if (data) {
-            setCurrentDataPadukuhan(data?.dukuh || "")
+
+            (data?.dukuh || "")
             setDukuhSebelumnya(data.dukuh)
             setName(data.nama)
             setPhone(data.no_hp)
@@ -153,7 +156,7 @@ const KontakDarurat = () => {
                     {
                         kontakData.length > 0 ?
                             (
-                                kontakData.map((item: any, index: number) => {
+                                kontakData.map((item, index: number) => {
                                     return (
                                         <View key={index} style={tw`p-[14px] flex flex-row items-center bg-white shadow-sm mb-[15px]`}>
                                             <View style={tw``}>
@@ -165,8 +168,7 @@ const KontakDarurat = () => {
                                             </View>
 
                                             <View style={tw`flex-1 ml-4`}>
-                                                <Text style={tw`font-bold text-xl `}>{item?.nama}</Text>
-
+                                                <Text style={tw`font-bold text-xl text-black `}>{item?.nama}</Text>
                                                 <View style={tw`flex flex-row`}>
                                                     <Text>{item?.keterangan} | </Text>
                                                     <Text>{item?.dukuh}</Text>
@@ -174,7 +176,19 @@ const KontakDarurat = () => {
                                                 <Text>{item?.no_hp}</Text>
 
                                                 <View style={tw`flex flex-row items-center mt-2`}>
-                                                    <TouchableOpacity onPress={() => handleUpdate(item.key)} style={tw`px-2 py-2 border border-green-900 mr-[10px]`}>
+                                                    <TouchableOpacity onPress={() =>
+                                                        navigation.navigate('UpdateKontakDarurat', {
+                                                            idEdit: true,
+                                                            data: {
+                                                                key: item.key,
+                                                                dukuh: item.dukuh,
+                                                                nama: item.nama,
+                                                                no_hp: item.no_hp,
+                                                                keterangan: item.keterangan,
+                                                                dukuh_sebelumnya: item.dukuh,
+                                                            }
+                                                        })
+                                                    } style={tw`px-2 py-2 border border-green-900 mr-[10px]`}>
                                                         <Text style={tw`text-base font-medium text-[#167270]`} >Ubah Data</Text>
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => handleRemove(item.dukuh, item.key)} style={tw`px-2 py-2 border border-red-900`}>
@@ -190,89 +204,19 @@ const KontakDarurat = () => {
                 </ScrollView>
             </View>
 
-            <Modal
-                animationType={"fade"}
-                transparent={false}
-                visible={isVisible}
-                onRequestClose={() => { console.log("Modal has been closed.") }}>
-                {/*All views of Modal*/}
-                <View style={tw`bg-white rounded-xl shadow relative dark:bg-gray-700 min-h-[550px] w-[80%] mx-auto mt-[80px]`}>
-                    {/* <Text style={tw`absolute  inset-x-0  bottom-[20px]`}>Modal is open!</Text> */}
-                    <View style={tw`bg-[#167270] rounded-t-xl h-[60px] p-[16px] flex flex-row absolute inset-x-0 top-0 justify-between`}>
-                        <Text style={tw`text-white text-xl font-bold`}>{isEdit ? 'Update Kontak' : "Tambah Kontak"}</Text>
-                        <TouchableOpacity onPress={() => setIsVisible(false)} style={tw`bg-white rounded-full h-[32px] w-[32px] rounded-full flex justify-center items-center`}>
-                            <Text style={tw`text-[#167270] text-base font-bold`}>X</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* text area input  */}
-                    <View style={tw` px-[18px] mt-[80px] mb-[20px]`}>
-                        <Text style={tw`mb-2 mt-4 font-medium text-base`}>Padukuhan</Text>
-                        <ModalSelector
-                            data={listPadukuhanDropwdown}
-                            initValue="Pilih Lokasi Padukuhan Anda Saat ini"
-                            supportedOrientations={['landscape']}
-                            onChange={(option) => {
-                                setCurrentDataPadukuhan(option.label as string);
-                            }}
-                            cancelButtonAccessible={true}
-                            onTouchCancel={() => {
-                                console.log("cancel")
-                                setCurrentDataPadukuhan("");
-                            }}
-                        >
-                            <View style={tw`border border-[#207729] rounded-xl px-[10px] py-[15px]`}>
-                                {
-                                    currentDataPadukuhan === "" ?
-                                        (
-                                            <Text style={tw`text-left`}>
-                                                Pilih Padukuhan
-                                            </Text>
-                                        ) :
-                                        (
-                                            <Text style={tw`text-left`}>
-                                                {currentDataPadukuhan}
-                                            </Text>
-                                        )
-
-                                }
-                            </View>
-
-                        </ModalSelector>
-
-                        <Text style={tw`mb-2 mt-4 font-medium text-base`}>Nama Kontak</Text>
-                        <TextInput
-                            defaultValue={name}
-                            onChangeText={(text) => setName(text)}
-                            style={tw`border border-[#207729] rounded-xl px-[10px]`}
-                            placeholder="Tulis nama kontak disini"
-                        />
-
-                        <Text style={tw`mb-2 mt-4 font-medium text-base`}>Nomor Telepon</Text>
-                        <TextInput
-                            defaultValue={phone}
-                            onChangeText={(text) => setPhone(text)}
-                            style={tw`border border-[#207729] rounded-xl px-[10px]`}
-                            placeholder="Tulis nomor telepon disini"
-                        />
-                        <Text style={tw`mb-2 mt-4 font-medium text-base`}>Keterangan</Text>
-                        <TextInput
-                            defaultValue={profesi}
-                            onChangeText={(text) => setProfesi(text)}
-                            style={tw`border border-[#207729] rounded-xl px-[10px] justify-start `}
-                            placeholder="Tulis jabatan/ptofesi kontak disini" />
-                    </View>
-
-
-                    <View style={tw`absolute rounded-xl inset-x-0 bottom-[10px] px-[20px]  `}>
-                        <Button color={'#167270'} title={isEdit ? "Update" : "Tambah"} onPress={() => handleSubmitData()} />
-                    </View>
-                </View>
-            </Modal>
-
             {/* button add card in bottom of screen */}
             <TouchableOpacity
-                onPress={() => handleModal()}
+                onPress={() => navigation.navigate("UpdateKontakDarurat", {
+                    idEdit: false,
+                    data: {
+                        nama: "",
+                        no_hp: "",
+                        keterangan: "",
+                        dukuh: "",
+                        dukuh_sebelumnya: "",
+                        key: ""
+                    }
+                })}
                 style={tw`bg-[#167270] rounded-full absolute bottom-[20px] right-[20px] h-12 w-12 flex justify-center items-center `}>
                 <Text style={tw`text-white text-4xl font-bold`} >+</Text>
             </TouchableOpacity>

@@ -5,7 +5,17 @@ import { BeritaMerapi as BeritaMerapiScreen, TambahBeritaMerapi as TambahBeritaM
 
 export type RootStackParamList = {
     BeritaMerapi: undefined,
-    TambahBeritaMerapi: undefined,
+    TambahBeritaMerapi: {
+        // props optional
+        idEdit: boolean,
+        data?: {
+            key?: string,
+            judul?: string,
+            ringkasan?: string,
+            isi?: string,
+
+        }
+    }
 }
 
 const Stack = createStackNavigator<RootStackParamList>();

@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { BeritaMerapi, StatusMerapi, KontakDarurat, JalurEvakuasi } from '../screens';
 import InformasiStatusNavigation from './InformasiStatusNavigation';
 import BeritaMerapiNavigation from './BeritaMerapiNavigation';
-
+import KontakDaruratNavigation from './KontakDaruratNavigation';
 import { useDispatch } from 'react-redux'
 import { loadPadukuhan, loadStatus, } from '../store'
 
@@ -46,7 +46,7 @@ export default function AppNavigation() {
                 <Drawer.Screen name="Status Merapi" component={StatusMerapi} />
                 <Drawer.Screen name="Informasi Status" component={InformasiStatusNavigation} />
                 <Drawer.Screen name="Berita Merapi" component={BeritaMerapiNavigation} />
-                <Drawer.Screen name="Kontak Darurat" component={KontakDarurat} />
+                <Drawer.Screen name="Kontak Darurat" component={KontakDaruratNavigation} />
                 <Drawer.Screen name="Jalur Evakuasi" component={JalurEvakuasi} />
             </Drawer.Navigator>
 

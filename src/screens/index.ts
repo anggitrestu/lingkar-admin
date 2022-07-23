@@ -5,7 +5,7 @@ import BeritaMerapi from './BeritaMerapi/BeritaMerapi';
 import KontakDarurat from './KontakDarurat/KontakDarurat';
 import JalurEvakuasi from './JalurEvakuasi/JalurEvakuasi';
 import TambahBeritaMerapi from './BeritaMerapi/TambahBeritaMerapi';
-
+import UpdateKontakDarurat from './KontakDarurat/UpdateKontakDarurat';
 export {
   StatusMerapi,
   DetailStatus,
@@ -14,4 +14,5 @@ export {
   KontakDarurat,
   JalurEvakuasi,
   TambahBeritaMerapi,
+  UpdateKontakDarurat,
 };
