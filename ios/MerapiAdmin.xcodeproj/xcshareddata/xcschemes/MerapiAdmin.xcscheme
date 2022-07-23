@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "MerapiAdmin.app"
-               BlueprintName = "MerapiAdmin"
-               ReferencedContainer = "container:MerapiAdmin.xcodeproj">
+               BuildableName = "AdminRadius.app"
+               BlueprintName = "AdminRadius"
+               ReferencedContainer = "container:AdminRadius.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "MerapiAdminTests.xctest"
-               BlueprintName = "MerapiAdminTests"
-               ReferencedContainer = "container:MerapiAdmin.xcodeproj">
+               BuildableName = "AdminRadiusTests.xctest"
+               BlueprintName = "AdminRadiusTests"
+               ReferencedContainer = "container:AdminRadius.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "MerapiAdmin.app"
-            BlueprintName = "MerapiAdmin"
-            ReferencedContainer = "container:MerapiAdmin.xcodeproj">
+            BuildableName = "AdminRadius.app"
+            BlueprintName = "AdminRadius"
+            ReferencedContainer = "container:AdminRadius.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "MerapiAdmin.app"
-            BlueprintName = "MerapiAdmin"
-            ReferencedContainer = "container:MerapiAdmin.xcodeproj">
+            BuildableName = "AdminRadius.app"
+            BlueprintName = "AdminRadius"
+            ReferencedContainer = "container:AdminRadius.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

@@ -81,8 +81,6 @@ export const addContact = (data: dataProps) => {
 export const updateContact = (key: string, data: dataProps) => {
   return async (dispatch: any, getState: any) => {
     try {
-      console.log('key', key);
-      console.log('key', data);
       let nama_dukuh = data.dukuh?.toLowerCase();
 
       const response = await fetch(

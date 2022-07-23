@@ -100,7 +100,6 @@ async function updateKontak({
   dukuh_sebelumnya = dukuh_sebelumnya?.toLowerCase();
 
   if (dukuh !== dukuh_sebelumnya) {
-    console.log('dukuh berbeda, maka hapus dulu');
     await fetch(`${API_URL}/kontak/${dukuh_sebelumnya}/${key}.json`, {
       method: 'DELETE',
     });

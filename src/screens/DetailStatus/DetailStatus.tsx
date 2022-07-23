@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Text, View, TouchableOpacity, ScrollView, Modal, Button, TextInput, Alert } from "react-native"
+import { Text, View, TouchableOpacity, ScrollView, Modal, Button, TextInput, Alert, Dimensions } from "react-native"
 import { IconTrash, IconArrowLeftWhite } from "../../assets";
 import tw from 'twrnc';
 import { RootStackParamList } from '../../navigation/InformasiStatusNavigation'
@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from "@react-navigation/native";
 import { addInfo, RootState, getInfo, removeInfo } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
+const { height, width } = Dimensions.get('screen')
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'DetailStatus'>;
@@ -74,33 +75,32 @@ const DetailStatus = ({ route, navigation }: Props) => {
                 </View>
             </View>
 
-            <ScrollView style={tw`p-[24px]`}>
-
+            <ScrollView style={tw`px-[24] mt-[24px]`}>
                 <View style={tw`px-[12px] py-[24px] ${route.params.color}/10 rounded-xl border border-[#207729] mb-[20px]`}>
                     <Text style={tw`text-2xl font-bold text-[#207729] text-center`}>{route.params.status}</Text>
                 </View>
-
                 {
                     info?.length > 0 ?
                         (
                             info.map((item: any, index: number) => {
                                 return (
-                                    <View key={index} style={tw`flex flex-row min-h-[50px] w-full pr-[10px] mb-[15px]`}>
+                                    <View key={index} style={tw`flex flex-row min-h-[50px] mb-[15px]`}>
                                         <TouchableOpacity onPress={() => confirmDeleteStatusDetail(route.params.status, item?.key)}>
                                             <IconTrash width={32} height={32} />
                                         </TouchableOpacity>
-                                        <Text style={tw`font-medium text-base text-justify`} >{item?.info}</Text>
+                                        <Text style={tw`font-medium w-[${width * 0.8}px] text-left text-base text-black`} >{item?.info}</Text>
                                     </View>
                                 )
                             }
                             )
                         ) : (
                             <View style={tw`flex flex-row min-h-[50px] w-full pr-[10px] mb-[15px]`}>
-                                <Text style={tw`font-medium text-base text-justify`} >Silahkan Tambah Data Terlebih Dahulu</Text>
+                                <Text style={tw`font-medium text-base text-justify text-black`} >Silahkan Tambah Data Terlebih Dahulu</Text>
                             </View>
                         )
                 }
 
+                <View style={tw`mb-[100px]`}></View>
             </ScrollView>
 
             <Modal
@@ -139,7 +139,9 @@ const DetailStatus = ({ route, navigation }: Props) => {
             </Modal>
 
             {/* button add card in bottom of screen */}
-            <TouchableOpacity onPress={() => setIsVisible(true)} style={tw`bg-[#167270] rounded-full absolute bottom-[20px] right-[20px] h-12 w-12 flex justify-center items-center `}>
+            <TouchableOpacity onPress={() =>
+                navigation.navigate('TambahDetailStatus', { status: route.params.status })
+            } style={tw`bg-[#167270] rounded-full absolute bottom-[20px] right-[20px] h-12 w-12 flex justify-center items-center `}>
                 <Text style={tw`text-white text-4xl font-bold`} >+</Text>
             </TouchableOpacity>
 

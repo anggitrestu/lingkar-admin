@@ -4,7 +4,6 @@ import tw from "twrnc"
 import { imageProfile } from "../../assets"
 const { height, width } = Dimensions.get("window")
 import ModalSelector from "react-native-modal-selector"
-import { addContact, removeContact, updateContact } from "../../redux/action/padukuhan"
 import { useDispatch, useSelector } from "react-redux"
 import { loadKontak, RootState, addKontak, removeKontak, updateKontak } from "../../store"
 import { PadukuhanType } from "../../store/types"
@@ -54,8 +53,6 @@ const KontakDarurat = () => {
     const [profesi, setProfesi] = useState("")
     const [dukuhSebelumnya, setDukuhSebelumnya] = useState("")
 
-    console.log("dukuhSebelumnya", dukuhSebelumnya)
-
     const validateInput = () => {
         if (name === "" || currentDataPadukuhan === "" || phone === "" || profesi === "") {
             Alert.alert("Data tidak boleh kosong")
@@ -103,14 +100,11 @@ const KontakDarurat = () => {
 
 
     const handleUpdate = (key: string) => {
-        console.log("key", key)
         setIsVisible(true)
         const data = kontakData.find((item: any) => item.key === key)
         if (data) {
             setCurrentDataPadukuhan(data?.dukuh || "")
             setDukuhSebelumnya(data.dukuh)
-            console.log("dukuh_", setDukuhSebelumnya)
-            console.log("currentDataPadukuhan", currentDataPadukuhan)
             setName(data.nama)
             setPhone(data.no_hp)
             setProfesi(data.keterangan)

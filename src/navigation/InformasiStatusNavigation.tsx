@@ -2,12 +2,16 @@ import React from 'react';
 import { createStackNavigator, } from '@react-navigation/stack';
 
 import { InformasiStatus, DetailStatus } from '../screens';
+import TambahDetailStatus from '../screens/DetailStatus/TambahDetailStatus';
 
 export type RootStackParamList = {
     InformasiStatus: undefined,
     DetailStatus: {
         status: string,
         color: string,
+    },
+    TambahDetailStatus: {
+        status: string,
     }
 }
 
@@ -30,6 +34,10 @@ const StatusMerapiNavigation = () => {
             <Stack.Screen
                 name="DetailStatus"
                 component={DetailStatus}
+            />
+            <Stack.Screen
+                name="TambahDetailStatus"
+                component={TambahDetailStatus}
             />
         </Stack.Navigator>
     )

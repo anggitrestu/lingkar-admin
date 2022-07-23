@@ -1,8 +1,10 @@
 import { useIsFocused } from "@react-navigation/native"
+import { NativeStackScreenProps } from "@react-navigation/native-stack"
 import React, { useEffect, useState } from "react"
 import { Text, View, TouchableOpacity, ScrollView, Dimensions, Modal, TextInput, Button, Alert } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import tw from "twrnc"
+import { RootStackParamList } from "../../navigation/BeritaMerapiNavigation"
 const { width } = Dimensions.get("window")
 import { RootState, addBerita, loadBerita, updateBerita, removeBerita } from '../../store'
 
@@ -17,7 +19,10 @@ type dataBeritaProps = {
     date?: string,
 }
 
-const BeritaMerapi = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'TambahBeritaMerapi'>;
+
+
+const BeritaMerapi = ({ navigation }: Props) => {
 
     const dispatch = useDispatch()
     const beritaData = useSelector((state: RootState) => state.berita.berita)
@@ -193,15 +198,12 @@ const BeritaMerapi = () => {
                             style={tw`border border-[#207729] rounded-xl px-[10px] justify-start `}
                             placeholder="Tulis isi berita disini" />
                     </View>
-
-
                     {
                         isEdit &&
                         <View style={tw`absolute inset-x-0 bottom-[50px] rounded-xl px-[20px]`}>
                             <Button color={'red'} title={"Hapus Berita"} onPress={() => handleDeleteBerita(currentData.key)} />
                         </View>
                     }
-
                     <View style={tw`absolute rounded-xl inset-x-0 bottom-[10px] px-[20px]  `}>
                         <Button color={'#167270'} title={isEdit ? "Update" : "Tambah"} onPress={() => handleTambahBerita(judul, ringkasan, isiBerita)} />
                     </View>
@@ -211,9 +213,10 @@ const BeritaMerapi = () => {
             {/* button add card in bottom of screen */}
             <TouchableOpacity
                 onPress={() => {
-                    setIsEdit(false)
-                    setIsVisible(true)
-                    clearForm()
+                    // setIsEdit(false)
+                    // setIsVisible(true)
+                    // clearForm()
+                    navigation.navigate('TambahBeritaMerapi')
                 }}
                 style={tw`bg-[#167270] rounded-full absolute bottom-[20px] right-[20px] h-12 w-12 flex justify-center items-center `}>
                 <Text style={tw`text-white text-4xl font-bold`} >+</Text>

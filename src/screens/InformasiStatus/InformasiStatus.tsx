@@ -5,12 +5,8 @@ import tw from 'twrnc';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../navigation/InformasiStatusNavigation";
 import { DataCard, dataCardType } from "./data";
-import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../redux/reducer'
-
 
 type Props = NativeStackScreenProps<RootStackParamList, 'DetailStatus'>;
-
 
 const InformasiStatus = ({ navigation }: Props) => {
 

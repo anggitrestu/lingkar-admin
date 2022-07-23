@@ -65,7 +65,6 @@ export function loadStatus() {
 }
 
 export function addInfo({status, info}: addInfoProps) {
-  console.log(status, info);
   return (dispatch: any) => {
     dispatch(request());
     return merapiService
@@ -85,7 +84,6 @@ export function addInfo({status, info}: addInfoProps) {
 }
 
 export function getInfo(status: string) {
-  console.log('start getInfo', status);
   return (dispatch: any) => {
     return merapiService
       .getInfos(status)
